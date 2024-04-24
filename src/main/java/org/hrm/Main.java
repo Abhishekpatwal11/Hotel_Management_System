@@ -5,7 +5,8 @@ import java.util.Scanner;
 class Main extends QueryDetail {
     public static void main(String[] args)throws Exception{
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel_management_system", "root", "aBHISHEKWINS@1234");
-            while (true) {
+        boolean a=true;
+            while (a) {
                 System.out.println("press 1 for reserving the room ");
                 System.out.println("press 2 for view the reservation ");
                 System.out.println("press 3 for update in reservation");
@@ -18,21 +19,31 @@ class Main extends QueryDetail {
                 switch (choose) {
                     case 1:
                         reservation(conn);
+                        break;
                     case 2:
-                        View_reservation(conn);
+                        viewreservation(conn);
+                        break;
                     case 3:
-                        update_reservation(conn);
+                        updatereservation(conn);
+                        break;
                     case 4:
-                        get_roomno(conn);
+                        getroomno(conn);
+                        break;
                     case 5:
-                        Delete_Reservation(conn);
+                        deletereservation(conn);
+                        break;
                     case 6:
                         exit_from_system();
+                        a=false;
+                        break;
+                    default:
+                        break;
                 }
             }
     }
 
     private static void reservation(Connection con) throws SQLException {
+
         QueryDetail Q=new QueryDetail();
         Scanner sc =new Scanner(System.in);
         System.out.println("Enter the name: ");
@@ -49,11 +60,10 @@ class Main extends QueryDetail {
         Statement stmt=con.createStatement();
         stmt.execute(query2);
         System.out.println("Reservation get succesfully...");
-        System.exit(0);
+
     }
 
-    private static void View_reservation(Connection con)throws Exception
-    {
+    private static void viewreservation(Connection con)throws Exception {
         QueryDetail Q=new QueryDetail();
         Scanner sc=new Scanner(System.in);
         System.out.println("Enter the name: ");
@@ -68,10 +78,60 @@ class Main extends QueryDetail {
         } else {
             System.out.println("No data found for name: " + name);
         }
-        System.exit(0);
     }
 
-    private  static void update_reservation(Connection conn) throws SQLException {
+    public static void updatename(Connection conn) throws Exception
+    {
+        Statement stmt = conn.createStatement();
+        QueryDetail q=new QueryDetail();
+        Scanner Sc = new Scanner(System.in);
+        System.out.println("Enter the newname: ");
+        String newname = Sc.next();
+        q.setNewName(newname);
+        System.out.println("Enter the oldname: ");
+        String oldname = Sc.next();
+        q.setOldName(oldname);
+
+        String query = "update H_M_S set name=" + "'" + q.newName + "'" + "where name=" + "'" + q.oldName + "'";
+        stmt.execute(query);
+        System.out.println("name update succesfully...");
+    }
+
+    public static void roomno(Connection conn) throws Exception
+    {
+        Statement stmt = conn.createStatement();
+        QueryDetail q=new QueryDetail();
+        Scanner Sc = new Scanner(System.in);
+        System.out.println("Enter the newroomno: ");
+        int newroomno=Sc.nextInt();
+        q.setNewroomno(newroomno);
+        System.out.println("Enter the oldroomno: ");
+        int oldroomno=Sc.nextInt();
+        q.setOldroomno(oldroomno);
+        stmt.execute("SET SQL_SAFE_UPDATES = 0");
+        String query1 = "update H_M_S set roomno=" + q.newroomno + " where roomno = " + q.oldroomno;
+        stmt.execute(query1);
+        System.out.println("roomno update succesfully...");
+    }
+
+    public static void contactno(Connection conn) throws Exception
+    {
+        Statement stmt = conn.createStatement();
+        QueryDetail q=new QueryDetail();
+        Scanner Sc = new Scanner(System.in);
+        System.out.println("Enter the newcontactno: ");
+        int newcontactno=Sc.nextInt();
+        q.setNewcontactno(newcontactno);
+        System.out.println("Enter the oldcontactno: ");
+        int oldcontactno=Sc.nextInt();
+        q.setOldcotactno(oldcontactno);
+        stmt.execute("SET SQL_SAFE_UPDATES = 0;");
+        String query2 = "update H_M_S set contactno=" + q.newcontactno + " where contactno = " + q.oldcotactno;
+        stmt.execute(query2);
+        System.out.println("contact update succesfully...");
+    }
+
+    private  static void updatereservation(Connection conn) throws Exception {
         Statement stmt = conn.createStatement();
         Scanner Sc=new Scanner(System.in);
         QueryDetail q=new QueryDetail();
@@ -82,47 +142,17 @@ class Main extends QueryDetail {
         q.setNum(num);
 
         if(num==1) {
-            System.out.println("Enter the newname: ");
-            String newname = Sc.next();
-            q.setNewName(newname);
-            System.out.println("Enter the oldname: ");
-            String oldname = Sc.next();
-            q.setOldName(oldname);
-
-            String query = "update H_M_S set name=" + "'" + q.newName + "'" + "where name=" + "'" + q.oldName + "'";
-            stmt.execute(query);
-            System.out.println("name update succesfully...");
-            System.exit(0);
+            updatename(conn);
         }
         else if(num==2) {
-            System.out.println("Enter the newroomno: ");
-            int newroomno=Sc.nextInt();
-            q.setNewroomno(newroomno);
-            System.out.println("Enter the oldroomno: ");
-            int oldroomno=Sc.nextInt();
-            q.setOldroomno(oldroomno);
-            stmt.execute("SET SQL_SAFE_UPDATES = 0");
-            String query1 = "update H_M_S set roomno=" + q.newroomno + " where roomno = " + q.oldroomno;
-            stmt.execute(query1);
-            System.out.println("roomno update succesfully...");
-            System.exit(0);
+            roomno(conn);
         }
         else if (num==3) {
-            System.out.println("Enter the newcontactno: ");
-            int newcontactno=Sc.nextInt();
-            q.setNewcontactno(newcontactno);
-            System.out.println("Enter the oldcontactno: ");
-            int oldcontactno=Sc.nextInt();
-            q.setOldcotactno(oldcontactno);
-            stmt.execute("SET SQL_SAFE_UPDATES = 0;");
-            String query2 = "update H_M_S set contactno=" + q.newcontactno + " where contactno = " + q.oldcotactno;
-            stmt.execute(query2);
-            System.out.println("contact update succesfully...");
-            System.exit(0);
+            contactno(conn);
         }
     }
 
-    private static void get_roomno(Connection conn)throws Exception
+    private static void getroomno(Connection conn)throws Exception
     {
         Statement stmt=conn.createStatement();
         Scanner sc= new Scanner(System.in);
@@ -134,10 +164,9 @@ class Main extends QueryDetail {
         {
             System.out.println("The room number of person is: " + rs.getString("roomno"));
         }
-        System.exit(0);
     }
 
-    private static void Delete_Reservation(Connection conn)throws Exception
+    private static void deletereservation(Connection conn)throws Exception
     {
         Statement stmt=conn.createStatement();
         Scanner sc= new Scanner(System.in);
@@ -146,11 +175,9 @@ class Main extends QueryDetail {
         String query="delete from h_m_s where name=" + "'" + name + "'";
         System.out.println("record has been deleted...");
         stmt.execute(query);
-        System.exit(0);
     }
     private static void exit_from_system()
     {
         System.out.println(" Thank you for visiting the hotel... ");
-        System.exit(0);
     }
 }
